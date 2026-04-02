@@ -5,9 +5,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh '''
-                docker build -t devops-java-app .
-                '''
+                sh 'docker build -t devops-java-app .'
             }
         }
 
@@ -22,19 +20,8 @@ pipeline {
 
         stage('Run Container') {
             steps {
-                sh '''
-                docker run -d -p 8081:8081 --name devops-container devops-java-app || true
-                '''
+                sh 'docker run -d -p 8081:8081 --name devops-container devops-java-app'
             }
-        }
-    }
-
-    post {
-        success {
-            echo '✅ Build & Deployment Successful!'
-        }
-        failure {
-            echo '❌ Something went wrong!'
         }
     }
 }
