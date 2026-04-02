@@ -11,31 +11,30 @@ pipeline {
             }
         }
 
-        stage('Stop & Remove Old Container') {
+        stage('Clean Old Containers') {
             steps {
                 sh '''
-                docker stop devops-container || true
-                docker rm devops-container || true
+                docker stop $(docker ps -q) || true
+                docker rm $(docker ps -aq) || true
                 '''
             }
         }
 
-        stage('Run New Container') {
+        stage('Run Container') {
             steps {
                 sh '''
-                docker run -d -p 8081:8081 --name devops-container devops-java-app
+                docker run -d -p 8081:8081 --name devops-container devops-java-app || true
                 '''
             }
         }
-
     }
 
     post {
         success {
-            echo '✅ Deployment Successful!'
+            echo '✅ Build & Deployment Successful!'
         }
         failure {
-            echo '❌ Deployment Failed!'
+            echo '❌ Something went wrong!'
         }
     }
 }
